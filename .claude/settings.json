@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "WebFetch(domain:rakaya.sa)",
+      "WebFetch(domain:aman.rakaya.sa)",
+      "WebFetch(domain:www.rakaya.sa)",
+      "WebFetch(domain:refada.co)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(node --experimental-sqlite -e \"const {DatabaseSync}=require\\('node:sqlite'\\); const db=new DatabaseSync\\(':memory:'\\); db.exec\\('CREATE TABLE t\\(x\\)'\\); db.prepare\\('INSERT INTO t VALUES\\(?\\)'\\).run\\(42\\); console.log\\('node:sqlite OK ->', db.prepare\\('SELECT x FROM t'\\).get\\(\\)\\);\")",
+      "Bash(pkill -f \"server/index.js\")",
+      "Bash(pkill -f vite)",
+      "Bash(pkill -f concurrently)"
+    ]
+  }
+}
