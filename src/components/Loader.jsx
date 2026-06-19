@@ -3,7 +3,7 @@ import { ORG } from '../data'
 export default function Loader({ error }) {
   return (
     <div className="loader">
-      <img className="loader__logo" src={`${import.meta.env.BASE_URL}rakaya-logo-black.png`} alt={ORG} />
+      <img className="loader__logo" src={`${import.meta.env.BASE_URL}rakaya-mark.png`} alt={ORG} />
       {error ? (
         <p className="loader__error">{error}</p>
       ) : (
