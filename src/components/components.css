@@ -48,8 +48,8 @@
   height: 46px;
   display: block;
   background: #fff;
-  -webkit-mask: url(/rakaya-mark.png) center / contain no-repeat;
-  mask: url(/rakaya-mark.png) center / contain no-repeat;
+  -webkit-mask: url(../assets/rakaya-mark.png) center / contain no-repeat;
+  mask: url(../assets/rakaya-mark.png) center / contain no-repeat;
   transition: background 0.3s ease, width 0.3s ease, height 0.3s ease;
 }
 .nav--scrolled .nav__logo-mark {
@@ -936,10 +936,10 @@
   /* شبكة منتظمة من نجمة الخاتم */
   background: rgba(255, 255, 255, 0.05);
   -webkit-mask:
-    url(/rakaya-tile.svg) 0 0 / 88px 88px repeat,
+    url(../assets/rakaya-tile.svg) 0 0 / 88px 88px repeat,
     radial-gradient(120% 90% at 50% 42%, transparent 0%, transparent 34%, #000 78%);
   mask:
-    url(/rakaya-tile.svg) 0 0 / 88px 88px repeat,
+    url(../assets/rakaya-tile.svg) 0 0 / 88px 88px repeat,
     radial-gradient(120% 90% at 50% 42%, transparent 0%, transparent 34%, #000 78%);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
@@ -1035,14 +1035,14 @@
 /* باترن ركايا الرسمي — زخارف الهوية كعلامة مائية ناعمة */
 .sec-pattern[data-pattern='rakaya'] {
   background: var(--pc);
-  -webkit-mask: url(/rakaya-pattern.svg) center / cover no-repeat;
-  mask: url(/rakaya-pattern.svg) center / cover no-repeat;
+  -webkit-mask: url(../assets/rakaya-pattern.svg) center / cover no-repeat;
+  mask: url(../assets/rakaya-pattern.svg) center / cover no-repeat;
 }
 /* نسخة مكرّرة خفيفة (texture) */
 .sec-pattern[data-pattern='rakaya-tile'] {
   background: var(--pc);
-  -webkit-mask: url(/rakaya-pattern.svg) 0 0 / 420px auto;
-  mask: url(/rakaya-pattern.svg) 0 0 / 420px auto;
+  -webkit-mask: url(../assets/rakaya-pattern.svg) 0 0 / 420px auto;
+  mask: url(../assets/rakaya-pattern.svg) 0 0 / 420px auto;
   opacity: 0.8;
 }
 /* علامة مائية من رمز ركايا في الزاوية */
@@ -1053,8 +1053,8 @@
   width: 320px;
   height: 320px;
   background: var(--pc);
-  -webkit-mask: url(/rakaya-emblem.svg) center / contain no-repeat;
-  mask: url(/rakaya-emblem.svg) center / contain no-repeat;
+  -webkit-mask: url(../assets/rakaya-emblem.svg) center / contain no-repeat;
+  mask: url(../assets/rakaya-emblem.svg) center / contain no-repeat;
   animation: breathe 16s ease-in-out infinite;
 }
 

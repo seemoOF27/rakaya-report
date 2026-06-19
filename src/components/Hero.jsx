@@ -15,7 +15,7 @@ export default function Hero() {
       <span className="hero-pattern" aria-hidden="true" />
 
       <div className="container hero__inner">
-        <img className="hero__logo" src="/rakaya-logo-full-white.png" alt={ORG} />
+        <img className="hero__logo" src={`${import.meta.env.BASE_URL}rakaya-logo-full-white.png`} alt={ORG} />
         {meta.season && <span className="hero__badge">{meta.season}</span>}
         <h1 className="hero__title">{meta.title}</h1>
         {meta.intro && <p className="hero__intro">{meta.intro}</p>}

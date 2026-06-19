@@ -56,7 +56,7 @@ function Login() {
   return (
     <div className="login" data-theme="light">
       <form className="login__card" onSubmit={submit}>
-        <img className="login__logo" src="/rakaya-logo-black.png" alt={ORG} />
+        <img className="login__logo" src={`${import.meta.env.BASE_URL}rakaya-logo-black.png`} alt={ORG} />
         <h1 className="login__title">لوحة التحكم</h1>
         <p className="login__sub">سجّل الدخول لإدارة محتوى التقرير</p>
         <label className="fld">
@@ -129,7 +129,7 @@ function AdminApp() {
       <header className="admin__topbar">
         <div className="admin__topbar-inner">
           <div className="admin__brand">
-            <img src="/rakaya-logo-white.png" alt={ORG} />
+            <img src={`${import.meta.env.BASE_URL}rakaya-logo-white.png`} alt={ORG} />
             <div>
               <strong>لوحة التحكم</strong>
               <span>إدارة محتوى تقرير الحج</span>
