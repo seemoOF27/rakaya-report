@@ -6,6 +6,7 @@ import TeamSection from '../components/TeamSection'
 import StatsSection from '../components/StatsSection'
 import Timeline from '../components/Timeline'
 import ChallengesGallery from '../components/ChallengesGallery'
+import Testimonials from '../components/Testimonials'
 import Recommendations from '../components/Recommendations'
 import Conclusion from '../components/Conclusion'
 import Footer from '../components/Footer'
@@ -46,6 +47,7 @@ export default function ReportPage() {
         <StatsSection />
         <Timeline />
         <ChallengesGallery />
+        <Testimonials />
         <Recommendations />
         <Conclusion />
       </main>

@@ -9,6 +9,7 @@ const LINKS = [
   { href: '#stats', label: 'الإحصائيات' },
   { href: '#timeline', label: 'الأحداث' },
   { href: '#challenges', label: 'التحديات' },
+  { href: '#testimonials', label: 'الآراء' },
   { href: '#recommendations', label: 'التوصيات' },
   { href: '#conclusion', label: 'الخاتمة' },
 ]

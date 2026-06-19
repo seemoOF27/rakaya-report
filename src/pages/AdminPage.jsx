@@ -19,6 +19,7 @@ const TABS = [
   { key: 'challenges', label: 'التحديات' },
   { key: 'gallery', label: 'المعرض' },
   { key: 'recommendations', label: 'التوصيات' },
+  { key: 'testimonials', label: 'الآراء' },
   { key: 'layouts', label: 'العرض والتخطيط' },
 ]
 
@@ -204,6 +205,7 @@ function AdminApp() {
           {tab === 'challenges' && <ChallengesEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
           {tab === 'gallery' && <GalleryEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
           {tab === 'recommendations' && <RecommendationsEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
+          {tab === 'testimonials' && <TestimonialsEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
           {tab === 'layouts' && <LayoutsEditor data={data} setLayout={setLayout} />}
         </div>
 
@@ -739,6 +741,38 @@ function RecommendationsEditor({ data, updateItem, addItem, removeItem, moveItem
         ))}
       </div>
       <AddBtn label="إضافة توصية" onClick={() => addItem('recommendations', { title: '', text: '' })} />
+    </div>
+  )
+}
+
+function TestimonialsEditor({ data, updateItem, addItem, removeItem, moveItem }) {
+  const items = data.testimonials || []
+  return (
+    <div className="ed-stack">
+      <h3 className="ed-title">آراء المستخدمين ({items.length})</h3>
+      <p className="ed-hint">تعليقات الشكر من المستخدمين — تقدر تظهر أو تخفي أي تعليق.</p>
+      <div className="ed-grid">
+        {items.map((t, i) => (
+          <div className={`ed-card ${t.hidden ? 'ed-card--hidden' : ''}`} key={t.id || i}>
+            <CardHead index={i} onUp={() => moveItem('testimonials', i, -1)} onDown={() => moveItem('testimonials', i, 1)} onRemove={() => removeItem('testimonials', i)} />
+            <button
+              type="button"
+              className={`ev-vis ${t.hidden ? 'is-hidden' : ''}`}
+              onClick={() => updateItem('testimonials', i, 'hidden', !t.hidden)}
+            >
+              <Icon name={t.hidden ? 'eye-off' : 'eye'} size={15} />
+              {t.hidden ? 'مخفي — لا يظهر في التقرير' : 'ظاهر في التقرير'}
+            </button>
+            <Field label="التعليق">
+              <textarea rows={3} value={t.quote || ''} onChange={(e) => updateItem('testimonials', i, 'quote', e.target.value)} />
+            </Field>
+            <Field label="المصدر (اسم المركز / الشخص)">
+              <input type="text" value={t.author || ''} onChange={(e) => updateItem('testimonials', i, 'author', e.target.value)} />
+            </Field>
+          </div>
+        ))}
+      </div>
+      <AddBtn label="إضافة رأي" onClick={() => addItem('testimonials', { quote: '', author: '', hidden: false })} />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import {
   CHALLENGES,
   GALLERY,
   RECOMMENDATIONS,
+  SEED_TESTIMONIALS,
   REPORT_META,
   CONCLUSION,
   DEFAULT_LAYOUTS,
@@ -32,6 +33,7 @@ export function buildDefaultStore() {
         challenges: clone(CHALLENGES),
         gallery: clone(GALLERY),
         recommendations: clone(RECOMMENDATIONS),
+        testimonials: clone(SEED_TESTIMONIALS),
         layouts: { ...DEFAULT_LAYOUTS },
       },
     },
@@ -50,6 +52,7 @@ export function emptyYear(label, key) {
     challenges: [],
     gallery: [],
     recommendations: [],
+    testimonials: [],
     layouts: { ...DEFAULT_LAYOUTS },
   }
 }
@@ -85,6 +88,7 @@ export function normalizeStore(store) {
     years[k] = { ...y }
     if (!years[k].layouts) years[k].layouts = { ...DEFAULT_LAYOUTS }
     if (!years[k].slug) years[k].slug = k
+    if (!years[k].testimonials) years[k].testimonials = []
   }
   let activeYear = store.activeYear
   if (!activeYear || !years[activeYear]) activeYear = Object.keys(years)[0]
