@@ -30,6 +30,27 @@ function fileToDataUrl(file) {
   })
 }
 
+// قصّ وتصغير الصورة لأفاتار صغير (يبقى الحجم خفيف في القاعدة)
+function fileToAvatar(file, size = 220) {
+  return new Promise((res) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        canvas.width = size
+        canvas.height = size
+        const ctx = canvas.getContext('2d')
+        const s = Math.min(img.width, img.height)
+        ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size)
+        res(canvas.toDataURL('image/jpeg', 0.85))
+      }
+      img.src = reader.result
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
 /* ============ البوابة: تحميل / تسجيل دخول / المحرر ============ */
 export default function AdminPage() {
   const { loading, isAuthed } = useCms()
@@ -389,6 +410,11 @@ function MetaEditor({ data, updateMeta, updateConclusion }) {
 }
 
 function TeamEditor({ data, updateItem, addItem, removeItem, moveItem }) {
+  const onPhoto = async (i, file) => {
+    if (!file) return
+    const url = await fileToAvatar(file)
+    updateItem('team', i, 'photo', url)
+  }
   return (
     <div className="ed-stack">
       <h3 className="ed-title">أعضاء الفريق ({data.team.length})</h3>
@@ -396,6 +422,37 @@ function TeamEditor({ data, updateItem, addItem, removeItem, moveItem }) {
         {data.team.map((m, i) => (
           <div className="ed-card" key={m.id || i}>
             <CardHead index={i} onUp={() => moveItem('team', i, -1)} onDown={() => moveItem('team', i, 1)} onRemove={() => removeItem('team', i)} />
+            <div className="tm-avatar">
+              <div className="tm-avatar__preview">
+                {m.photo ? (
+                  <img src={m.photo} alt="" />
+                ) : m.emoji ? (
+                  <span className="tm-avatar__emoji">{m.emoji}</span>
+                ) : (
+                  <span className="tm-avatar__init">{(m.name || '؟').trim().charAt(0) || '؟'}</span>
+                )}
+              </div>
+              <div className="tm-avatar__controls">
+                <label className="btn btn--ghost btn--sm" style={{ cursor: 'pointer' }}>
+                  <Icon name="upload" size={14} /> صورة
+                  <input type="file" accept="image/*" hidden onChange={(e) => onPhoto(i, e.target.files?.[0])} />
+                </label>
+                {m.photo && (
+                  <button type="button" className="btn btn--ghost btn--sm" onClick={() => updateItem('team', i, 'photo', '')}>
+                    إزالة
+                  </button>
+                )}
+                <input
+                  className="tm-emoji"
+                  type="text"
+                  maxLength={2}
+                  placeholder="😀"
+                  value={m.emoji || ''}
+                  onChange={(e) => updateItem('team', i, 'emoji', e.target.value)}
+                  title="إيموجي بديل عن الصورة"
+                />
+              </div>
+            </div>
             <Field label="الاسم">
               <input type="text" value={m.name || ''} onChange={(e) => updateItem('team', i, 'name', e.target.value)} />
             </Field>

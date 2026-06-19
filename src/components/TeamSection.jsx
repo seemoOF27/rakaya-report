@@ -52,11 +52,20 @@ export default function TeamSection() {
             const t = WORK_TYPES[m.type] || WORK_TYPES.full
             return (
               <article key={m.id} className="member reveal">
-                <div className="member__avatar" style={{ background: `linear-gradient(135deg, ${t.color}, var(--brand-darker))` }}>
-                  {initials(m.name)}
+                <div
+                  className="member__avatar"
+                  style={m.photo ? undefined : { background: `linear-gradient(135deg, ${t.color}, var(--brand-darker))` }}
+                >
+                  {m.photo ? (
+                    <img src={m.photo} alt={m.name} loading="lazy" />
+                  ) : m.emoji ? (
+                    <span className="member__emoji">{m.emoji}</span>
+                  ) : (
+                    initials(m.name)
+                  )}
                 </div>
                 <h3 className="member__name">{m.name}</h3>
-                {m.role && <p className="member__role">{m.role}</p>}
+                <p className="member__role">{m.role}</p>
                 <div className="member__meta">
                   {m.dept && <span className="member__dept">{m.dept}</span>}
                   <span className="badge" style={{ color: t.color, background: t.bg }}>

@@ -305,8 +305,9 @@
   border-color: var(--brand-soft);
 }
 .member__avatar {
-  width: 74px;
-  height: 74px;
+  position: relative;
+  width: 78px;
+  height: 78px;
   border-radius: 50%;
   margin: 0 auto 16px;
   display: grid;
@@ -314,17 +315,44 @@
   color: #fff;
   font-size: 26px;
   font-weight: 800;
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
+  animation: floatAvatar 5s ease-in-out infinite;
+  transition: box-shadow 0.3s ease;
+}
+.member__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.member__emoji {
+  font-size: 38px;
+  line-height: 1;
+}
+.member:hover .member__avatar {
+  box-shadow: 0 0 0 5px var(--brand-soft), var(--shadow-md);
+}
+/* تدرّج بسيط في توقيت طفو الأفاتار */
+.team__grid .member:nth-child(3n + 2) .member__avatar { animation-delay: -1.6s; }
+.team__grid .member:nth-child(3n) .member__avatar { animation-delay: -3.2s; }
+@keyframes floatAvatar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .member__avatar { animation: none !important; }
 }
 .member__name {
   font-size: 19px;
   margin-bottom: 4px;
 }
+/* مساحة الدور محجوزة دائمًا ليتساوى ارتفاع الكروت */
 .member__role {
   color: var(--brand);
   font-weight: 600;
   font-size: 14.5px;
   margin-bottom: 16px;
+  min-height: 1.2em;
 }
 .member__meta {
   display: flex;
