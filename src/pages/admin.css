@@ -545,6 +545,22 @@
   opacity: 1;
 }
 
+/* ---- فيديو الحدث ---- */
+.ev-video {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.ev-video__preview {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #000;
+  margin-bottom: 8px;
+}
+
 /* ---- اختيار التخطيط ---- */
 .layout-options {
   display: flex;

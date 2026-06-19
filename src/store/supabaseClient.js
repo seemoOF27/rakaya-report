@@ -25,6 +25,19 @@ export async function saveStoreRemote(password, store) {
   if (error) throw error
 }
 
+// رفع ملف فيديو إلى التخزين وإرجاع رابطه العام
+export async function uploadVideo(file) {
+  if (!supabase) throw new Error('Supabase غير مُهيّأ')
+  const ext = (file.name.split('.').pop() || 'mp4').toLowerCase()
+  const path = `videos/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
+  const { error } = await supabase.storage
+    .from('rakaya-report-storage')
+    .upload(path, file, { cacheControl: '3600', upsert: false, contentType: file.type })
+  if (error) throw error
+  const { data } = supabase.storage.from('media').getPublicUrl(path)
+  return data.publicUrl
+}
+
 // التحقق من كلمة المرور
 export async function checkPassword(password) {
   if (!supabase) return false

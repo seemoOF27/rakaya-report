@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ORG, WORK_TYPES, LAYOUTS, LAYOUT_SECTIONS, DEFAULT_LAYOUTS } from '../data'
 import { useCms } from '../store/CmsContext'
 import { parseEventsFromExcel, downloadTemplate } from '../utils/excel'
+import { uploadVideo } from '../store/supabaseClient'
 import Icon from '../components/Icon'
 import Loader from '../components/Loader'
 
@@ -457,6 +458,25 @@ function StatsEditor({ data, updateItem, addItem, removeItem, moveItem }) {
 
 function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem, flash }) {
   const fileRef = useRef(null)
+  const [uploadingIdx, setUploadingIdx] = useState(-1)
+
+  const onVideo = async (i, file) => {
+    if (!file) return
+    if (file.size > 100 * 1024 * 1024) {
+      flash('حجم الفيديو كبير (الحد ~100MB)')
+      return
+    }
+    setUploadingIdx(i)
+    try {
+      const url = await uploadVideo(file)
+      updateItem('events', i, 'video', url)
+      flash('تم رفع الفيديو')
+    } catch (err) {
+      flash('تعذّر رفع الفيديو — تأكد من إعداد التخزين')
+    } finally {
+      setUploadingIdx(-1)
+    }
+  }
 
   const onExcel = async (e) => {
     const file = e.target.files?.[0]
@@ -532,9 +552,35 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
             <Field label="الوصف">
               <textarea rows={2} value={ev.description || ''} onChange={(e) => updateItem('events', i, 'description', e.target.value)} />
             </Field>
-            <Field label="رابط فيديو (اختياري — يوتيوب/فيميو/رابط مباشر)">
-              <input type="url" dir="ltr" placeholder="https://youtu.be/..." value={ev.video || ''} onChange={(e) => updateItem('events', i, 'video', e.target.value)} />
-            </Field>
+            <div className="fld">
+              <span>فيديو الحدث (اختياري)</span>
+              <div className="ev-video">
+                <label className="btn btn--ghost btn--sm" style={{ cursor: 'pointer' }}>
+                  <Icon name="upload" size={15} />
+                  {uploadingIdx === i ? 'جارٍ الرفع…' : 'رفع فيديو'}
+                  <input
+                    type="file"
+                    accept="video/*"
+                    hidden
+                    disabled={uploadingIdx === i}
+                    onChange={(e) => onVideo(i, e.target.files?.[0])}
+                  />
+                </label>
+                {ev.video && (
+                  <button type="button" className="btn btn--ghost btn--sm" onClick={() => updateItem('events', i, 'video', '')}>
+                    إزالة الفيديو
+                  </button>
+                )}
+              </div>
+              {ev.video && <video className="ev-video__preview" src={ev.video} controls preload="metadata" />}
+              <input
+                type="url"
+                dir="ltr"
+                placeholder="أو الصق رابط يوتيوب/فيميو"
+                value={ev.video || ''}
+                onChange={(e) => updateItem('events', i, 'video', e.target.value)}
+              />
+            </div>
             <div className="fld">
               <span>الصور</span>
               <div className="ev-images">
