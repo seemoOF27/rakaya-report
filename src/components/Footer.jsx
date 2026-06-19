@@ -15,9 +15,9 @@ export default function Footer() {
         <p className="footer__copy">
           {meta.title} — {meta.season} · جميع الحقوق محفوظة
         </p>
-        <Link to="/admin" className="footer__admin">
+        {/* <Link to="/admin" className="footer__admin">
           لوحة التحكم
-        </Link>
+        </Link> */}
       </div>
     </footer>
   )
