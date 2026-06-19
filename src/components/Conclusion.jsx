@@ -1,6 +1,5 @@
 import { useCms } from '../store/CmsContext'
 import Icon from './Icon'
-import SectionPattern from './SectionPattern'
 
 export default function Conclusion() {
   const { displayData: activeData } = useCms()
@@ -9,7 +8,6 @@ export default function Conclusion() {
 
   return (
     <section id="conclusion" className="section section-conclusion">
-      <SectionPattern name="rakaya" />
       <div className="container">
         <div className="conclusion__card reveal">
           <div className="conclusion__icon">

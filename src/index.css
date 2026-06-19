@@ -1,13 +1,17 @@
 :root {
-  /* هوية ركايا (ثابتة في النمطين) */
+  /* هوية ركايا — التيل هو الأساس */
   --brand: #0e4d55;
   --brand-dark: #0b3b41;
   --brand-darker: #062a2f;
-  --gold: #c9b171;
-  --gold-dark: #846b44;
+  --brand-light: #4fb0bb; /* تيل فاتح للإبراز فوق الخلفيات الداكنة */
+  /* ذهبي = لون دلالي (تحذير) فقط — لا يُستخدم كلون أساسي */
+  --gold: #cdb375;
+  --gold-light: #e3d09b;
+  --gold-dark: #b0934c;
+  --gold-soft: #f3ecd6;
 
   --radius: 16px;
-  --radius-lg: 24px;
+  --radius-lg: 22px;
   --maxw: 1180px;
   --font: 'Tajawal', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
@@ -22,10 +26,10 @@
   --bg: #f5f5f5;
   --card: #ffffff;
   --white: #ffffff;
-  --nav-bg: rgba(255, 255, 255, 0.92);
-  --shadow-sm: 0 2px 8px rgba(7, 51, 40, 0.06);
-  --shadow-md: 0 12px 32px rgba(7, 51, 40, 0.1);
-  --shadow-lg: 0 24px 60px rgba(7, 51, 40, 0.16);
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --shadow-sm: 0 1px 2px rgba(11, 59, 65, 0.04), 0 4px 16px rgba(11, 59, 65, 0.05);
+  --shadow-md: 0 10px 34px rgba(11, 59, 65, 0.09);
+  --shadow-lg: 0 28px 64px rgba(11, 59, 65, 0.13);
 }
 
 /* النمط الليلي */
@@ -101,39 +105,41 @@ button {
 
 .section-head {
   text-align: center;
-  max-width: 680px;
-  margin: 0 auto 56px;
+  max-width: 660px;
+  margin: 0 auto 60px;
 }
 
 .section-eyebrow {
   display: inline-block;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   color: var(--brand);
   background: var(--brand-soft);
-  padding: 6px 16px;
+  padding: 7px 18px;
   border-radius: 999px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .section-title {
   font-size: clamp(28px, 4vw, 40px);
   color: var(--ink);
   margin-bottom: 14px;
+  letter-spacing: -0.3px;
 }
 
 .section-subtitle {
-  font-size: 18px;
+  font-size: 17.5px;
+  line-height: 1.8;
   color: var(--muted);
 }
 
 .gold-bar {
-  width: 64px;
+  width: 56px;
   height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-  margin: 14px auto 0;
+  background: linear-gradient(90deg, var(--brand-light), var(--brand));
+  margin: 16px auto 0;
 }
 
 /* ---------- Buttons ---------- */
@@ -142,31 +148,46 @@ button {
   align-items: center;
   gap: 8px;
   border: none;
-  border-radius: 12px;
-  padding: 12px 22px;
+  border-radius: 13px;
+  padding: 13px 24px;
   font-size: 15px;
   font-weight: 700;
-  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: transform 0.18s ease, box-shadow 0.22s ease, background 0.2s ease, filter 0.2s ease;
 }
 
+.btn:hover {
+  transform: translateY(-2px);
+}
 .btn:active {
-  transform: translateY(1px);
+  transform: translateY(0);
 }
 
 .btn--primary {
   background: var(--brand);
   color: #fff;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 22px rgba(11, 59, 65, 0.22);
 }
 
 .btn--primary:hover {
   background: var(--brand-dark);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 12px 28px rgba(11, 59, 65, 0.28);
 }
 
+/* زر فاتح يبرز فوق الخلفية التيل الداكنة */
+.btn--light {
+  background: #ffffff;
+  color: var(--brand-dark);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.btn--light:hover {
+  background: #f1f6f6;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+/* (احتياطي) زر ذهبي للحالات الدلالية فقط */
 .btn--gold {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: #2a2410;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: #3c2f10;
 }
 
 .btn--ghost {

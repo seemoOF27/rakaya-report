@@ -45,12 +45,8 @@ export default function Navbar() {
   return (
     <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
       <div className="container nav__inner">
-        <a href="#intro" className="nav__brand">
-          <img
-            className="nav__logo-img"
-            src={scrolled ? '/rakaya-logo-black.png' : '/rakaya-logo-white.png'}
-            alt={ORG}
-          />
+        <a href="#intro" className="nav__brand" aria-label={ORG}>
+          <span className="nav__logo-mark" role="img" aria-label={ORG} />
           <span className="nav__brand-text">{ORG}</span>
         </a>
 

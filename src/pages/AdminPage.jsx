@@ -159,6 +159,7 @@ function AdminApp() {
             try { await deleteYear(y); flash('تم حذف السنة') } catch (e) { flash(e.message) }
           }}
           renameYear={renameYear}
+          patchYear={patchYear}
         />
 
         <div className="admin__tabs">
@@ -209,7 +210,7 @@ function AdminApp() {
 }
 
 /* ============ إدارة السنوات ============ */
-function YearManager({ years, yearKeys, activeYear, editingYear, setEditingYear, setActiveYear, addYear, deleteYear, renameYear }) {
+function YearManager({ years, yearKeys, activeYear, editingYear, setEditingYear, setActiveYear, addYear, deleteYear, renameYear, patchYear }) {
   const [showAdd, setShowAdd] = useState(false)
   const [newKey, setNewKey] = useState('')
   const [newLabel, setNewLabel] = useState('')
@@ -243,7 +244,7 @@ function YearManager({ years, yearKeys, activeYear, editingYear, setEditingYear,
           </select>
         </div>
 
-        <div className="ym__field ym__field--grow">
+        <div className="ym__field">
           <label>اسم/عنوان السنة</label>
           <input
             type="text"
@@ -251,6 +252,26 @@ function YearManager({ years, yearKeys, activeYear, editingYear, setEditingYear,
             onChange={(e) => renameYear(editingYear, e.target.value)}
             placeholder="مثال: 1446 هـ"
           />
+        </div>
+
+        <div className="ym__field ym__field--grow">
+          <label>الرابط المخصّص (slug)</label>
+          <input
+            type="text"
+            value={years[editingYear]?.slug || ''}
+            onChange={(e) =>
+              patchYear(editingYear, {
+                slug: e.target.value.trim().replace(/\s+/g, '-'),
+              })
+            }
+            placeholder={editingYear}
+            dir="ltr"
+          />
+          <span className="ym__url">
+            {editingYear === activeYear
+              ? `النشطة — تُفتح من /  (ورابطها أيضًا /r/${years[editingYear]?.slug || editingYear})`
+              : `تُفتح من: /r/${years[editingYear]?.slug || editingYear}`}
+          </span>
         </div>
 
         <div className="ym__actions">
@@ -480,14 +501,26 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
         {data.events.map((ev, i) => (
           <div className={`ed-card ed-card--wide ${ev.hidden ? 'ed-card--hidden' : ''}`} key={ev.id || i}>
             <CardHead index={i} onUp={() => moveItem('events', i, -1)} onDown={() => moveItem('events', i, 1)} onRemove={() => removeItem('events', i)} />
-            <button
-              type="button"
-              className={`ev-vis ${ev.hidden ? 'is-hidden' : ''}`}
-              onClick={() => updateItem('events', i, 'hidden', !ev.hidden)}
-            >
-              <Icon name={ev.hidden ? 'eye-off' : 'eye'} size={15} />
-              {ev.hidden ? 'مخفي — لا يظهر في التقرير' : 'مرئي في التقرير'}
-            </button>
+            <div className="ev-toggles">
+              <button
+                type="button"
+                className={`ev-vis ${ev.hidden ? 'is-hidden' : ''}`}
+                onClick={() => updateItem('events', i, 'hidden', !ev.hidden)}
+              >
+                <Icon name={ev.hidden ? 'eye-off' : 'eye'} size={15} />
+                {ev.hidden ? 'مخفي — لا يظهر في التقرير' : 'مرئي في التقرير'}
+              </button>
+              {(ev.images || []).length > 0 && (
+                <button
+                  type="button"
+                  className={`ev-vis ev-vis--gallery ${ev.inGallery === false ? 'is-off' : ''}`}
+                  onClick={() => updateItem('events', i, 'inGallery', ev.inGallery === false)}
+                >
+                  <Icon name="qr" size={15} />
+                  {ev.inGallery === false ? 'صوره خارج المعرض' : 'صوره تظهر في المعرض'}
+                </button>
+              )}
+            </div>
             <div className="ed-row2">
               <Field label="عنوان الحدث">
                 <input type="text" value={ev.title || ''} onChange={(e) => updateItem('events', i, 'title', e.target.value)} />

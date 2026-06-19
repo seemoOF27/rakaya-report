@@ -82,7 +82,7 @@ export const TEAM = [
 // أنواع العمل
 export const WORK_TYPES = {
   full: { label: 'دوام كامل', color: '#0d6e57', bg: '#e6f2ee' },
-  part: { label: 'دوام جزئي', color: '#846b44', bg: '#f3edda' },
+  part: { label: 'دوام جزئي', color: '#566b6e', bg: '#eef2f2' },
   season: { label: 'موسمي', color: '#2563a8', bg: '#e4eefb' },
 }
 
@@ -152,7 +152,7 @@ export const CHALLENGES = [
 
 export const GALLERY = [
   { id: 1, color: '#0d6e57', caption: 'الفريق الميداني' },
-  { id: 2, color: '#846b44', caption: 'نقاط الخدمة' },
+  { id: 2, color: '#1f6f63', caption: 'نقاط الخدمة' },
   { id: 3, color: '#0a4f3f', caption: 'الإرشاد والتوعية' },
   { id: 4, color: '#2563a8', caption: 'غرفة العمليات' },
   { id: 5, color: '#c9b171', caption: 'التكريم الختامي' },

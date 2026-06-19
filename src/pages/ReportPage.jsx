@@ -16,13 +16,20 @@ import { useReveal } from '../hooks/useReveal'
 import { useCms } from '../store/CmsContext'
 
 export default function ReportPage() {
-  const { year } = useParams()
-  const { displayData, displayYear, loading, error, setViewYear } = useCms()
+  const { slug } = useParams()
+  const { years, displayData, displayYear, loading, error, setViewYear } = useCms()
 
-  // مزامنة السنة المعروضة مع الـURL
+  // مزامنة السنة المعروضة مع الـslug في الرابط (وإلا النشطة)
   useEffect(() => {
-    setViewYear(year || null)
-  }, [year, setViewYear])
+    if (!slug) {
+      setViewYear(null)
+      return
+    }
+    const key =
+      Object.keys(years).find((k) => (years[k].slug || k) === slug) ||
+      (years[slug] ? slug : null)
+    setViewYear(key)
+  }, [slug, years, setViewYear])
 
   useReveal()
 

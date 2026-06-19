@@ -8,10 +8,11 @@ import './pages/admin.css'
 export default function App() {
   return (
     <CmsProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<ReportPage />} />
-          <Route path="/years/:year" element={<ReportPage />} />
+          <Route path="/r/:slug" element={<ReportPage />} />
+          <Route path="/years/:slug" element={<ReportPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>

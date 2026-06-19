@@ -11,7 +11,7 @@ export default function YearSwitcher({ className = '' }) {
       {yearKeys.map((k) => (
         <Link
           key={k}
-          to={k === activeYear ? '/' : `/years/${k}`}
+          to={k === activeYear ? '/' : `/r/${years[k].slug || k}`}
           className={`year-pill ${k === displayYear ? 'is-active' : ''}`}
         >
           {years[k].label}

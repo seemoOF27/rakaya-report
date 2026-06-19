@@ -7,10 +7,15 @@ import {
   useRef,
   useState,
 } from 'react'
-const API = '/api'
-const TOKEN_KEY = 'rakaya_token'
+import { SUPABASE_READY, fetchStore, saveStoreRemote, checkPassword } from './supabaseClient'
+import {
+  buildDefaultStore,
+  normalizeStore,
+  withNewYear,
+  withoutYear,
+} from './defaults'
 
-const authHeaders = (token) => (token ? { Authorization: `Bearer ${token}` } : {})
+const PW_KEY = 'rakaya_pw'
 
 const CmsContext = createContext(null)
 
@@ -18,9 +23,9 @@ export function CmsProvider({ children }) {
   const [store, setStore] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || '')
+  const [password, setPassword] = useState(() => localStorage.getItem(PW_KEY) || '')
+  const [viewYear, setViewYear] = useState(null)
 
-  // مرآة للحالة الحالية لاستخدامها داخل المؤقتات
   const storeRef = useRef(store)
   useEffect(() => {
     storeRef.current = store
@@ -30,12 +35,17 @@ export function CmsProvider({ children }) {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const r = await fetch(`${API}/store`)
-      if (!r.ok) throw new Error('failed')
-      setStore(await r.json())
+      if (!SUPABASE_READY) {
+        setStore(buildDefaultStore())
+        setError(null)
+        return
+      }
+      const remote = await fetchStore()
+      setStore(remote ? normalizeStore(remote) : buildDefaultStore())
       setError(null)
     } catch (e) {
-      setError('تعذّر الاتصال بالخادم. تأكد أن الخادم يعمل (npm run dev).')
+      setStore(buildDefaultStore())
+      setError('تعذّر الاتصال بقاعدة البيانات — يُعرض المحتوى الافتراضي.')
     } finally {
       setLoading(false)
     }
@@ -45,110 +55,80 @@ export function CmsProvider({ children }) {
     load()
   }, [load])
 
-  // ---------- المصادقة ----------
-  const login = useCallback(async (password) => {
-    try {
-      const r = await fetch(`${API}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      })
-      if (!r.ok) {
-        const j = await r.json().catch(() => ({}))
-        return { ok: false, error: j.error || 'فشل تسجيل الدخول' }
+  // ---------- الحفظ ----------
+  const saveTimer = useRef(null)
+  const persist = useCallback(
+    (nextStore, { immediate = false } = {}) => {
+      setStore(nextStore)
+      storeRef.current = nextStore
+      const doSave = async () => {
+        if (!SUPABASE_READY || !password) return
+        try {
+          await saveStoreRemote(password, storeRef.current)
+          setError(null)
+        } catch (e) {
+          setError('فشل الحفظ. تأكد من كلمة المرور والاتصال.')
+        }
       }
-      const { token: t } = await r.json()
-      localStorage.setItem(TOKEN_KEY, t)
-      setToken(t)
+      clearTimeout(saveTimer.current)
+      if (immediate) return doSave()
+      saveTimer.current = setTimeout(doSave, 500)
+    },
+    [password]
+  )
+
+  // ---------- المصادقة ----------
+  const login = useCallback(async (pw) => {
+    if (!SUPABASE_READY) return { ok: false, error: 'قاعدة البيانات غير مُهيّأة بعد.' }
+    try {
+      const ok = await checkPassword(pw)
+      if (!ok) return { ok: false, error: 'كلمة المرور غير صحيحة' }
+      localStorage.setItem(PW_KEY, pw)
+      setPassword(pw)
       return { ok: true }
     } catch (e) {
-      return { ok: false, error: 'تعذّر الاتصال بالخادم' }
+      return { ok: false, error: 'تعذّر الاتصال بقاعدة البيانات' }
     }
   }, [])
 
-  const logout = useCallback(async () => {
-    try {
-      await fetch(`${API}/logout`, { method: 'POST', headers: authHeaders(token) })
-    } catch (e) {
-      /* ignore */
-    }
-    localStorage.removeItem(TOKEN_KEY)
-    setToken('')
-  }, [token])
+  const logout = useCallback(() => {
+    localStorage.removeItem(PW_KEY)
+    setPassword('')
+  }, [])
 
-  // طلب يتطلب صلاحية — يرمي خطأ عند انتهاء الجلسة
-  const authed = useCallback(
-    async (path, opts = {}) => {
-      const r = await fetch(`${API}${path}`, {
-        ...opts,
-        headers: { 'Content-Type': 'application/json', ...authHeaders(token), ...(opts.headers || {}) },
-      })
-      if (r.status === 401) {
-        localStorage.removeItem(TOKEN_KEY)
-        setToken('')
-        throw new Error('انتهت الجلسة. سجّل الدخول من جديد.')
-      }
-      if (!r.ok) {
-        const j = await r.json().catch(() => ({}))
-        throw new Error(j.error || 'حدث خطأ')
-      }
-      return r.json()
-    },
-    [token]
+  // ---------- عمليات السنوات ----------
+  const setActiveYear = useCallback(
+    (year) => persist({ ...storeRef.current, activeYear: String(year) }, { immediate: true }),
+    [persist]
   )
 
-  // ---------- عمليات هيكلية (تُحدّث الحالة من استجابة الخادم) ----------
   const addYear = useCallback(
     (key, label, copyFrom) =>
-      authed('/years', { method: 'POST', body: JSON.stringify({ key, label, copyFrom }) }).then(
-        setStore
-      ),
-    [authed]
+      persist(withNewYear(storeRef.current, key, label, copyFrom), { immediate: true }),
+    [persist]
   )
 
   const deleteYear = useCallback(
-    (key) =>
-      authed(`/years/${encodeURIComponent(key)}`, { method: 'DELETE' }).then(setStore),
-    [authed]
-  )
-
-  const setActiveYear = useCallback(
-    (year) => authed('/active', { method: 'PUT', body: JSON.stringify({ year }) }).then(setStore),
-    [authed]
+    (key) => persist(withoutYear(storeRef.current, key), { immediate: true }),
+    [persist]
   )
 
   const resetAll = useCallback(
-    () => authed('/reset', { method: 'POST' }).then(setStore),
-    [authed]
+    () => persist(buildDefaultStore(), { immediate: true }),
+    [persist]
   )
 
-  // ---------- تعديل المحتوى: متفائل + حفظ مؤجّل ----------
-  const saveTimers = useRef({})
-
+  // دمج جزئي على سنة (متفائل + حفظ مؤجّل)
   const patchYear = useCallback(
     (key, partial) => {
-      // تحديث فوري محلي (سلس أثناء الكتابة)
-      setStore((prev) => {
-        if (!prev || !prev.years[key]) return prev
-        return { ...prev, years: { ...prev.years, [key]: { ...prev.years[key], ...partial } } }
+      const cur = storeRef.current
+      if (!cur || !cur.years[key]) return
+      persist({
+        ...cur,
+        years: { ...cur.years, [key]: { ...cur.years[key], ...partial } },
       })
-      // حفظ مؤجّل للخادم
-      clearTimeout(saveTimers.current[key])
-      saveTimers.current[key] = setTimeout(async () => {
-        const cur = storeRef.current?.years?.[key]
-        if (!cur) return
-        try {
-          await authed(`/years/${encodeURIComponent(key)}`, {
-            method: 'PUT',
-            body: JSON.stringify(cur),
-          })
-          setError(null)
-        } catch (e) {
-          setError(e.message)
-        }
-      }, 500)
     },
-    [authed]
+    [persist]
   )
 
   const renameYear = useCallback((key, label) => patchYear(key, { label }), [patchYear])
@@ -157,9 +137,6 @@ export function CmsProvider({ children }) {
   const yearKeys = useMemo(() => (store ? Object.keys(store.years) : []), [store])
   const activeYear = store && store.years[store.activeYear] ? store.activeYear : yearKeys[0]
   const activeData = store ? store.years[activeYear] : null
-
-  // السنة المعروضة في التقرير (من الـURL)، وإلا النشطة
-  const [viewYear, setViewYear] = useState(null)
   const displayYear = store && viewYear && store.years[viewYear] ? viewYear : activeYear
   const displayData = store ? store.years[displayYear] : null
 
@@ -168,8 +145,8 @@ export function CmsProvider({ children }) {
     loading,
     error,
     setError,
-    token,
-    isAuthed: !!token,
+    isAuthed: !!password,
+    canSave: SUPABASE_READY,
     login,
     logout,
     years: store ? store.years : {},

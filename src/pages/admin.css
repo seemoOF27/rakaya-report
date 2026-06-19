@@ -76,6 +76,13 @@
   flex: 1;
   min-width: 200px;
 }
+.ym__url {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  direction: ltr;
+  text-align: start;
+}
 .ym__field label {
   font-size: 13px;
   font-weight: 700;
@@ -494,11 +501,26 @@
 }
 
 /* ---- مرئية/إخفاء الحدث ---- */
+.ev-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.ev-vis--gallery {
+  border-color: var(--brand) !important;
+  background: var(--brand-soft) !important;
+  color: var(--brand) !important;
+}
+.ev-vis--gallery.is-off {
+  border-color: var(--line) !important;
+  background: var(--bg) !important;
+  color: var(--muted) !important;
+}
 .ev-vis {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-bottom: 12px;
   padding: 7px 14px;
   border-radius: 9px;
   border: 1.5px solid var(--brand);

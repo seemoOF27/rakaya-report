@@ -42,17 +42,23 @@
   font-size: 20px;
   box-shadow: var(--shadow-sm);
 }
-.nav__logo-img {
-  height: 40px;
-  width: auto;
+/* علامة ركايا الجديدة (تتلوّن حسب حالة الهيدر) */
+.nav__logo-mark {
+  width: 46px;
+  height: 46px;
   display: block;
+  background: #fff;
+  -webkit-mask: url(/rakaya-mark.png) center / contain no-repeat;
+  mask: url(/rakaya-mark.png) center / contain no-repeat;
+  transition: background 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+.nav--scrolled .nav__logo-mark {
+  width: 40px;
+  height: 40px;
+  background: var(--brand);
 }
 .nav__brand-text {
   display: none;
-}
-.nav--scrolled .nav__logo-img {
-  height: 34px;
-  transition: height 0.3s;
 }
 .nav__links {
   display: flex;
@@ -112,9 +118,9 @@
   background: rgba(255, 255, 255, 0.12);
 }
 .year-pill.is-active {
-  background: var(--gold);
-  color: #2a2410;
-  border-color: var(--gold);
+  background: #ffffff;
+  color: var(--brand-dark);
+  border-color: #ffffff;
 }
 .nav--scrolled .year-pill {
   color: var(--muted);
@@ -187,10 +193,10 @@
 .hero__glow--2 {
   width: 320px;
   height: 320px;
-  background: var(--gold);
+  background: var(--brand-light);
   bottom: 20px;
   inset-inline-end: -40px;
-  opacity: 0.28;
+  opacity: 0.22;
 }
 .hero__inner {
   position: relative;
@@ -198,21 +204,23 @@
   max-width: 820px;
 }
 .hero__logo {
-  height: 64px;
+  height: 104px;
   width: auto;
-  margin: 0 auto 26px;
+  margin: 0 auto 28px;
   display: block;
 }
 .hero__badge {
   display: inline-block;
-  padding: 8px 20px;
+  padding: 8px 22px;
   border-radius: 999px;
-  border: 1px solid rgba(207, 169, 77, 0.5);
-  color: var(--gold);
+  border: 1px solid rgba(79, 176, 187, 0.4);
+  color: #9fdce2;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14.5px;
+  letter-spacing: 0.3px;
   margin-bottom: 24px;
-  background: rgba(207, 169, 77, 0.08);
+  background: rgba(79, 176, 187, 0.12);
+  backdrop-filter: blur(4px);
 }
 .hero__title {
   font-size: clamp(36px, 6vw, 60px);
@@ -224,7 +232,7 @@
   display: block;
   font-size: 0.5em;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--brand-light);
   margin-top: 10px;
 }
 .hero__intro {
@@ -292,9 +300,9 @@
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 .member:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-md);
-  border-color: transparent;
+  border-color: var(--brand-soft);
 }
 .member__avatar {
   width: 74px;
@@ -364,8 +372,8 @@
   display: grid;
   place-items: center;
   margin: 0 auto 16px;
-  background: rgba(207, 169, 77, 0.18);
-  color: var(--gold);
+  background: rgba(79, 176, 187, 0.18);
+  color: var(--brand-light);
 }
 .stat__value {
   font-size: 42px;
@@ -373,7 +381,7 @@
   line-height: 1;
 }
 .stat__suffix {
-  color: var(--gold);
+  color: var(--brand-light);
   font-size: 28px;
   margin-inline-start: 2px;
 }
@@ -493,7 +501,7 @@
   background: transparent;
 }
 .timeline-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--brand), var(--gold));
+  background: linear-gradient(var(--brand), var(--brand-light));
   border-radius: 999px;
 }
 .timeline-scroll::-webkit-scrollbar-thumb:hover {
@@ -514,7 +522,7 @@
   top: 6px;
   bottom: 6px;
   width: 2px;
-  background: linear-gradient(var(--brand), var(--gold));
+  background: linear-gradient(var(--brand), var(--brand-light));
   opacity: 0.4;
 }
 .tl-item {
@@ -582,9 +590,10 @@
 }
 .tl-item__date {
   display: inline-block;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--gold-dark);
+  letter-spacing: 0.2px;
+  color: var(--brand);
   margin-bottom: 6px;
 }
 .tl-item__title {
@@ -638,8 +647,8 @@
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: #fbf2dc;
-  color: var(--gold-dark);
+  background: var(--brand-soft);
+  color: var(--brand);
   margin-bottom: 16px;
 }
 .challenge__title {
@@ -870,8 +879,8 @@
   display: grid;
   place-items: center;
   margin: 0 auto 22px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: #2a2410;
+  background: #ffffff;
+  color: var(--brand-dark);
 }
 .conclusion__title {
   font-size: clamp(24px, 4vw, 34px);
@@ -885,7 +894,7 @@
 }
 .conclusion__sign {
   margin-top: 24px;
-  color: var(--gold);
+  color: var(--brand-light);
   font-weight: 700;
 }
 
@@ -1399,7 +1408,7 @@
   width: 4px;
   height: 8px;
   border-radius: 4px;
-  background: var(--gold);
+  background: var(--brand-light);
   animation: scrollDot 1.6s ease-in-out infinite;
 }
 @keyframes scrollDot {
@@ -1444,9 +1453,9 @@
   opacity: 1;
 }
 
-/* أيقونة الإحصائية تطفو */
-.stat__icon {
-  animation: logoFloat 4s ease-in-out infinite;
+/* أيقونة الإحصائية تطفو بلطف عند المرور فقط (أهدأ للعين) */
+.stat:hover .stat__icon {
+  animation: logoFloat 3s ease-in-out infinite;
 }
 
 /* حلقة نبض حول نقطة التايملاين */
@@ -1492,7 +1501,7 @@
   inset-inline-start: 0;
   height: 3px;
   width: 0;
-  background: linear-gradient(90deg, var(--gold), var(--brand));
+  background: linear-gradient(90deg, var(--brand-light), var(--brand));
   z-index: 200;
   transition: width 0.1s linear;
 }
@@ -1538,7 +1547,7 @@
   -webkit-text-stroke: 1px #82c4bd;
 }
 [data-theme='dark'] .challenge__icon {
-  background: rgba(201, 177, 113, 0.14);
+  background: rgba(130, 196, 189, 0.14);
 }
 [data-theme='dark'] .footer {
   background: #141414;
@@ -1573,8 +1582,8 @@
   transform: translateY(-3px);
 }
 .ra-btn--gold {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: #2a2410;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: #fff;
 }
 .ra-btn:not(.ra-btn--gold) {
   width: 52px;
