@@ -21,10 +21,10 @@ export default function TeamSection() {
     <section id="team" className="section">
       <div className="container">
         <div className="section-head reveal">
-          <span className="section-eyebrow">الفريق</span>
-          <h2 className="section-title">أعضاء الفريق وأدوارهم</h2>
+          <span className="section-eyebrow">شركاء النجاح</span>
+          <h2 className="section-title">أعضاء الفريق التقني</h2>
           <p className="section-subtitle">
-            نستعرض الفريق الذي عمل خلال الموسم، مع توضيح الدور ونوع العمل لكل عضو.
+            الفريق الذي عمل خلال الموسم — مصنّفًا حسب نوع التعاقد.
           </p>
           <div className="gold-bar" />
         </div>
@@ -56,9 +56,9 @@ export default function TeamSection() {
                   {initials(m.name)}
                 </div>
                 <h3 className="member__name">{m.name}</h3>
-                <p className="member__role">{m.role}</p>
+                {m.role && <p className="member__role">{m.role}</p>}
                 <div className="member__meta">
-                  <span className="member__dept">{m.dept}</span>
+                  {m.dept && <span className="member__dept">{m.dept}</span>}
                   <span className="badge" style={{ color: t.color, background: t.bg }}>
                     {t.label}
                   </span>

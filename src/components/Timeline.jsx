@@ -1,4 +1,5 @@
 import { useCms } from '../store/CmsContext'
+import VideoEmbed from './VideoEmbed'
 
 function formatDate(d) {
   if (!d) return ''
@@ -42,8 +43,9 @@ export default function Timeline() {
               </div>
               <div className="tl-item__card">
                 {ev.date && <span className="tl-item__date">{formatDate(ev.date)}</span>}
-                <h3 className="tl-item__title">{ev.title}</h3>
+                {ev.title && <h3 className="tl-item__title">{ev.title}</h3>}
                 {ev.description && <p className="tl-item__desc">{ev.description}</p>}
+                {ev.video && <VideoEmbed url={ev.video} />}
                 {ev.images?.length > 0 && (
                   <div className="tl-item__images">
                     {ev.images.map((src, idx) => (

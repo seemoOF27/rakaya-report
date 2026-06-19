@@ -603,6 +603,21 @@
 .tl-item__desc {
   color: var(--muted);
   font-size: 15.5px;
+  white-space: pre-line;
+}
+.tl-video {
+  margin-top: 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.tl-video iframe,
+.tl-video video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  border: 0;
 }
 .tl-item__images {
   display: flex;

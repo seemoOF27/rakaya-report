@@ -522,7 +522,7 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
               )}
             </div>
             <div className="ed-row2">
-              <Field label="عنوان الحدث">
+              <Field label="عنوان الحدث (اختياري)">
                 <input type="text" value={ev.title || ''} onChange={(e) => updateItem('events', i, 'title', e.target.value)} />
               </Field>
               <Field label="التاريخ">
@@ -531,6 +531,9 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
             </div>
             <Field label="الوصف">
               <textarea rows={2} value={ev.description || ''} onChange={(e) => updateItem('events', i, 'description', e.target.value)} />
+            </Field>
+            <Field label="رابط فيديو (اختياري — يوتيوب/فيميو/رابط مباشر)">
+              <input type="url" dir="ltr" placeholder="https://youtu.be/..." value={ev.video || ''} onChange={(e) => updateItem('events', i, 'video', e.target.value)} />
             </Field>
             <div className="fld">
               <span>الصور</span>
@@ -550,7 +553,7 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
           </div>
         ))}
       </div>
-      <AddBtn label="إضافة حدث" onClick={() => addItem('events', { title: '', date: '', description: '', images: [] })} />
+      <AddBtn label="إضافة حدث" onClick={() => addItem('events', { title: '', date: '', description: '', video: '', images: [] })} />
     </div>
   )
 }
