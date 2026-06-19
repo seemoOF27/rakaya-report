@@ -81,8 +81,7 @@ export const TEAM = [
 
 // أنواع العمل
 export const WORK_TYPES = {
-  lead: { label: 'قائد', color: '#0b3b41', bg: '#dbe8e9' },
-  itmgr: { label: 'مدير قسم تقنية المعلومات', color: '#0e7490', bg: '#e0f2f4' },
+  lead: { label: 'قائد ومدير إدارة تقنية المعلومات', color: '#0b3b41', bg: '#dbe8e9' },
   full: { label: 'دوام كامل', color: '#0d6e57', bg: '#e6f2ee' },
   part: { label: 'دوام جزئي', color: '#566b6e', bg: '#eef2f2' },
   season: { label: 'موسمي', color: '#2563a8', bg: '#e4eefb' },

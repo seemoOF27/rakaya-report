@@ -64,7 +64,7 @@ export default function TeamSection() {
                     initials(m.name)
                   )}
                 </div>
-                <h3 className="member__name">{m.name}</h3>
+                <h3 className="member__name">م. {m.name}</h3>
                 <p className="member__role">{m.role}</p>
                 <div className="member__meta">
                   {m.dept && <span className="member__dept">{m.dept}</span>}
