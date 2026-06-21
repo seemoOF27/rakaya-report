@@ -50,7 +50,7 @@ export default function Timeline() {
                   <div className="tl-item__images">
                     {ev.images.map((src, idx) => (
                       <a key={idx} href={src} target="_blank" rel="noreferrer">
-                        <img src={src} alt={ev.title} loading="lazy" />
+                        <img src={src} alt={ev.title} />
                       </a>
                     ))}
                   </div>

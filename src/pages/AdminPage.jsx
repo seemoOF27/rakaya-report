@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ORG, WORK_TYPES, LAYOUTS, LAYOUT_SECTIONS, DEFAULT_LAYOUTS } from '../data'
 import { useCms } from '../store/CmsContext'
 import { parseEventsFromExcel, downloadTemplate } from '../utils/excel'
-import { uploadVideo } from '../store/supabaseClient'
+import { uploadVideo, uploadImage } from '../store/supabaseClient'
 import Icon from '../components/Icon'
 import Loader from '../components/Loader'
 
@@ -31,8 +31,8 @@ function fileToDataUrl(file) {
   })
 }
 
-// قصّ وتصغير الصورة لأفاتار صغير (يبقى الحجم خفيف في القاعدة)
-function fileToAvatar(file, size = 220) {
+// قصّ وتصغير صورة العضو إلى Blob صغير (يُرفع إلى التخزين)
+function fileToAvatarBlob(file, size = 240) {
   return new Promise((res) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -44,7 +44,7 @@ function fileToAvatar(file, size = 220) {
         const ctx = canvas.getContext('2d')
         const s = Math.min(img.width, img.height)
         ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size)
-        res(canvas.toDataURL('image/jpeg', 0.85))
+        canvas.toBlob((b) => res(b), 'image/jpeg', 0.85)
       }
       img.src = reader.result
     }
@@ -199,11 +199,11 @@ function AdminApp() {
 
         <div className="admin__panel">
           {tab === 'meta' && <MetaEditor data={data} updateMeta={updateMeta} updateConclusion={updateConclusion} />}
-          {tab === 'team' && <TeamEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
+          {tab === 'team' && <TeamEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} flash={flash} />}
           {tab === 'stats' && <StatsEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
           {tab === 'events' && <EventsEditor data={data} setList={setList} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} flash={flash} />}
           {tab === 'challenges' && <ChallengesEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
-          {tab === 'gallery' && <GalleryEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
+          {tab === 'gallery' && <GalleryEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} flash={flash} />}
           {tab === 'recommendations' && <RecommendationsEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
           {tab === 'testimonials' && <TestimonialsEditor data={data} updateItem={updateItem} addItem={addItem} removeItem={removeItem} moveItem={moveItem} />}
           {tab === 'layouts' && <LayoutsEditor data={data} setLayout={setLayout} />}
@@ -411,11 +411,16 @@ function MetaEditor({ data, updateMeta, updateConclusion }) {
   )
 }
 
-function TeamEditor({ data, updateItem, addItem, removeItem, moveItem }) {
+function TeamEditor({ data, updateItem, addItem, removeItem, moveItem, flash }) {
   const onPhoto = async (i, file) => {
     if (!file) return
-    const url = await fileToAvatar(file)
-    updateItem('team', i, 'photo', url)
+    try {
+      const blob = await fileToAvatarBlob(file)
+      const url = await uploadImage(blob)
+      updateItem('team', i, 'photo', url)
+    } catch (e) {
+      flash('تعذّر رفع الصورة — تأكد من إعداد التخزين')
+    }
   }
   return (
     <div className="ed-stack">
@@ -554,9 +559,20 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
     }
   }
 
+  const [imgUploadingIdx, setImgUploadingIdx] = useState(-1)
   const onImages = async (i, files) => {
-    const urls = await Promise.all(Array.from(files).map(fileToDataUrl))
-    updateItem('events', i, 'images', [...(data.events[i].images || []), ...urls])
+    const list = Array.from(files)
+    if (!list.length) return
+    setImgUploadingIdx(i)
+    try {
+      const urls = []
+      for (const f of list) urls.push(await uploadImage(f))
+      updateItem('events', i, 'images', [...(data.events[i].images || []), ...urls])
+    } catch (e) {
+      flash('تعذّر رفع الصورة — تأكد من إعداد التخزين')
+    } finally {
+      setImgUploadingIdx(-1)
+    }
   }
 
   const removeImage = (i, idx) => {
@@ -650,8 +666,8 @@ function EventsEditor({ data, setList, updateItem, addItem, removeItem, moveItem
                   </div>
                 ))}
                 <label className="ev-upload">
-                  <Icon name="plus" size={18} />
-                  <input type="file" accept="image/*" multiple hidden onChange={(e) => onImages(i, e.target.files)} />
+                  {imgUploadingIdx === i ? '…' : <Icon name="plus" size={18} />}
+                  <input type="file" accept="image/*" multiple hidden disabled={imgUploadingIdx === i} onChange={(e) => onImages(i, e.target.files)} />
                 </label>
               </div>
             </div>
@@ -685,11 +701,15 @@ function ChallengesEditor({ data, updateItem, addItem, removeItem, moveItem }) {
   )
 }
 
-function GalleryEditor({ data, updateItem, addItem, removeItem, moveItem }) {
+function GalleryEditor({ data, updateItem, addItem, removeItem, moveItem, flash }) {
   const onImage = async (i, file) => {
     if (!file) return
-    const url = await fileToDataUrl(file)
-    updateItem('gallery', i, 'image', url)
+    try {
+      const url = await uploadImage(file)
+      updateItem('gallery', i, 'image', url)
+    } catch (e) {
+      flash('تعذّر رفع الصورة — تأكد من إعداد التخزين')
+    }
   }
   return (
     <div className="ed-stack">

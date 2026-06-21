@@ -1814,6 +1814,21 @@
   img { max-width: 100% !important; }
   /* قائمة الأحداث تتمدّد كاملة في الطباعة (بدون قص) */
   .timeline-scroll { max-height: none !important; overflow: visible !important; }
+  /* المعرض (كاروسيل): إظهار كل الصور في الطباعة بدل شريط واحد */
+  .carousel__track {
+    overflow: visible !important;
+    flex-wrap: wrap !important;
+  }
+  .carousel__nav,
+  .gallery__more,
+  .gallery__note {
+    display: none !important;
+  }
+  .carousel__item {
+    flex: 0 0 31% !important;
+    max-width: 31% !important;
+    page-break-inside: avoid;
+  }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
