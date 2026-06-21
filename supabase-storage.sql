@@ -1,10 +1,12 @@
 -- ════════════════════════════════════════════════════════════════
---  إعداد تخزين الفيديو (Supabase Storage) لباكت: rakaya-report-storage
---  Supabase → SQL Editor → New query → الصق هذا → Run
+--  إعداد تخزين الفيديو (Supabase Storage) — باكت: rakaya-report-storage
+--  Supabase → SQL Editor → New query → الصق هذا كله → Run
 -- ════════════════════════════════════════════════════════════════
 
--- 1) اجعل الباكت عامًا (قراءة عامة عبر الرابط)
-update storage.buckets set public = true where id = 'rakaya-report-storage';
+-- 1) إنشاء الباكت (عام) إن لم يكن موجودًا
+insert into storage.buckets (id, name, public)
+values ('rakaya-report-storage', 'rakaya-report-storage', true)
+on conflict (id) do update set public = true;
 
 -- 2) سياسة القراءة للجميع
 drop policy if exists "rakaya storage read" on storage.objects;
