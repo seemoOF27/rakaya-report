@@ -1882,3 +1882,61 @@
     justify-content: center;
   }
 }
+
+/* --- المعرض في الجوال --- */
+@media (max-width: 600px) {
+  .gallery__head {
+    margin-bottom: 20px;
+  }
+  .gallery__title {
+    font-size: 22px;
+  }
+  /* الكاروسيل: نخفي الأسهم ونعتمد على السحب باللمس، والصورة تاخذ عرض الشاشة مع لمحة من التالية */
+  .carousel {
+    gap: 0;
+  }
+  .carousel__nav {
+    display: none;
+  }
+  .carousel__track {
+    gap: 12px;
+    padding: 4px 0 12px;
+    scroll-padding-inline: 16px;
+  }
+  .carousel__item {
+    flex: 0 0 84vw;
+    max-width: 84vw;
+    scroll-snap-align: start;
+  }
+  /* الشبكة العادية: عمودين بدل ما تنضغط */
+  .gallery__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  /* كروت الأقسام: عمود واحد عشان ما تطفح أفقيًا في الجوال */
+  .reviews__grid,
+  .recs__grid,
+  .challenges__grid,
+  .timeline[data-layout='cards'] {
+    grid-template-columns: 1fr;
+  }
+  /* نافذة كل الصور */
+  .lightbox {
+    padding: 10px;
+  }
+  .lightbox__panel {
+    max-height: 92vh;
+    border-radius: var(--radius);
+  }
+  .lightbox__head {
+    padding: 14px 16px;
+  }
+  .lightbox__head h3 {
+    font-size: 16.5px;
+  }
+  .lightbox__grid {
+    padding: 14px 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
