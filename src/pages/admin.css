@@ -27,9 +27,13 @@
   align-items: center;
   gap: 12px;
 }
-.admin__brand img {
-  height: 40px;
-  width: auto;
+.admin__logo-mark {
+  width: 44px;
+  height: 44px;
+  display: block;
+  background: #fff;
+  -webkit-mask: url(../assets/rakaya-mark.png) center / contain no-repeat;
+  mask: url(../assets/rakaya-mark.png) center / contain no-repeat;
 }
 .admin__brand strong {
   display: block;
@@ -448,9 +452,12 @@
   text-align: center;
 }
 .login__logo {
-  height: 46px;
-  width: auto;
+  width: 60px;
+  height: 60px;
   margin: 0 auto 4px;
+  background: var(--brand);
+  -webkit-mask: url(../assets/rakaya-mark.png) center / contain no-repeat;
+  mask: url(../assets/rakaya-mark.png) center / contain no-repeat;
 }
 .login__title {
   font-size: 24px;

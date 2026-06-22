@@ -10,7 +10,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
-          <img className="footer__logo" src={`${import.meta.env.BASE_URL}rakaya-logo-white.png`} alt={ORG} />
+          <span className="footer__logo" role="img" aria-label={ORG} />
         </div>
         <p className="footer__copy">
           {meta.title} — {meta.season} · جميع الحقوق محفوظة
