@@ -760,10 +760,13 @@
   gap: 10px;
 }
 .carousel__track {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: 4px;
   padding: 6px 2px 14px;
   scrollbar-width: none;
 }
@@ -774,7 +777,7 @@
   flex: 0 0 320px;
   max-width: 80vw;
   aspect-ratio: 4 / 3;
-  scroll-snap-align: center;
+  scroll-snap-align: start;
 }
 .carousel__nav {
   flex-shrink: 0;
