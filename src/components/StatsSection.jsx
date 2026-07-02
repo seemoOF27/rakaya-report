@@ -30,7 +30,7 @@ function StatCard({ stat, run }) {
         <Icon name={stat.icon} size={26} />
       </div>
       <div className="stat__value">
-        {val.toLocaleString('ar-EG')}
+        {val.toLocaleString('en-US')}
         <span className="stat__suffix">{stat.suffix}</span>
       </div>
       <div className="stat__label">{stat.label}</div>
