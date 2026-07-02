@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useCms } from '../store/CmsContext'
 import VideoEmbed from './VideoEmbed'
+import ImageViewer from './ImageViewer'
 
 function formatDate(d) {
   if (!d) return ''
@@ -18,6 +20,7 @@ function sortByDate(list) {
 
 export default function Timeline() {
   const { displayData: activeData } = useCms()
+  const [viewer, setViewer] = useState(null) // { images, index }
   const events = (activeData.events || []).filter((e) => !e.hidden)
   if (!events.length) return null
 
@@ -49,9 +52,15 @@ export default function Timeline() {
                 {ev.images?.length > 0 && (
                   <div className="tl-item__images">
                     {ev.images.map((src, idx) => (
-                      <a key={idx} href={src} target="_blank" rel="noreferrer">
-                        <img src={src} alt={ev.title} />
-                      </a>
+                      <button
+                        type="button"
+                        key={idx}
+                        className="tl-thumb"
+                        onClick={() => setViewer({ images: ev.images, index: idx })}
+                        aria-label="عرض الصورة"
+                      >
+                        <img src={src} alt={ev.title || 'صورة الحدث'} />
+                      </button>
                     ))}
                   </div>
                 )}
@@ -61,6 +70,15 @@ export default function Timeline() {
         </div>
         </div>
       </div>
+
+      {viewer && (
+        <ImageViewer
+          images={viewer.images}
+          index={viewer.index}
+          onClose={() => setViewer(null)}
+          onIndex={(i) => setViewer((v) => ({ ...v, index: i }))}
+        />
+      )}
     </section>
   )
 }

@@ -656,6 +656,15 @@
   flex-wrap: wrap;
   margin-top: 14px;
 }
+.tl-thumb {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  display: block;
+  line-height: 0;
+  border-radius: 12px;
+}
 .tl-item__images img {
   width: 96px;
   height: 96px;
